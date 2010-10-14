@@ -1,0 +1,121 @@
+# Introduction
+
+jQuery plugin to calculate the offset `<area>`'s in an image `<map>`. It can count the top left offset of the shape whether it be a rectangle a circle or a polygon, as well as the center of it.
+
+## Example:
+
+    <!DOCTYPE HTML>
+    <html lang="en-US">
+    <head>
+      <meta charset="UTF-8">
+      <style type="text/css">
+        img {
+          border-style: none;
+        }
+        dl.menu {
+          display: none;
+          border: 1px solid black;
+          position: absolute;
+          margin: 0;
+          padding: 10px;
+          background: gold;
+        }
+        dl.menu-show {
+          display: block;
+        }
+        nav {
+          display: block;
+          position: relative;
+        }
+      </style>
+      <title>ImageMap</title>
+    </head>
+    <body>
+      <nav>
+        <p>The plantes of the solar system serving as a navigation:</p>
+        <map name="planetmap" id="planetmap">
+          <area shape="circle" coords="84,214,14" href="#mercury" alt="Mercury" id="map-mercury" />
+          <area shape="circle" coords="125,190,26" href="#venus" alt="Venus" id="map-venus" />
+          <area shape="circle" coords="175,161,26" href="#earth" alt="Earth" id="map-earth" />
+          <area shape="circle" coords="223,135,22" href="#mars" alt="Mars" id="map-mars" />
+          <area shape="circle" coords="396,212,67" href="#jupiter" alt="Jupiter" id="map-jupiter" />
+          <area shape="circle" coords="504,151,45" href="#saturn" alt="Saturn" id="map-saturn" />
+          <area shape="poly" coords="550,180,580,180,580,240,550,240" nohref="nohref" alt="X" id="map-extra">
+        </map>
+        <dl id="menu-earth" class="menu">
+          <dt>Name</dt>
+          <dd>Earth</dd>
+          <dt>Mean radius</dt>
+          <dd>6,371.0 km</dd>
+        </dl>
+        <dl id="menu-venus" class="menu">
+          <dt>Name</dt>
+          <dd>Venus</dd>
+          <dt>Mean radius</dt>
+          <dd>6,051.8 km</dd>
+        </dl>
+        <dl id="menu-mercury" class="menu">
+          <dt>Name</dt>
+          <dd>Mercury</dd>
+          <dt>Mean radius</dt>
+          <dd>2,439.7 km</dd>
+        </dl>
+        <dl id="menu-mars" class="menu">
+          <dt>Name</dt>
+          <dd>Mars</dd>
+          <dt>Mean radius</dt>
+          <dd>3,396.2 km</dd>
+        </dl>
+        <dl id="menu-jupiter" class="menu">
+          <dt>Name</dt>
+          <dd>Jupiter</dd>
+          <dt>Mean radius</dt>
+          <dd>71,492 km</dd>
+        </dl>
+        <dl id="menu-saturn" class="menu">
+          <dt>Name</dt>
+          <dd>Saturn</dd>
+          <dt>Mean radius</dt>
+          <dd>60,268 km</dd>
+        </dl>
+        <dl id="menu-extra" class="menu">
+          <dt>Name</dt>
+          <dd>Dust in space</dd>
+        </dl>
+        <img src="http://www.vtaide.com/png/images/planets3.jpg" alt="Solar system" longdesc="http://www.vtaide.com/png/images/planets3.jpg" usemap="#planetmap" id="planetimage" />
+      </nav>
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+      <script type="text/javascript" src="jquery.areaoffset.js"></script>
+      <script type="text/javascript">
+        jQuery(function ($) {
+          var planetImage = $('#planetimage'),
+              imageOffset = planetImage.position();
+
+          $('#planetmap').children('area').each(function () {
+            var menu = $(this.id.replace(/^map-/, '#menu-')),
+                area = $(this),
+                offset = $(this).areaOffset(true),
+                menuOffset = {
+                  left : imageOffset.left + offset.left,
+                  top  : imageOffset.top + offset.top
+                };
+            if (menu.length) {
+              menu.offset(menuOffset).bind('mouseleave', function () {
+                menu.removeClass('menu-show');
+              })
+            }
+            $.data(this, 'menu', menu);
+          }).bind('mouseenter', function () {
+            var menu = $.data(this, 'menu');
+
+            if (menu) {
+              $('dl.menu').removeClass('menu-show');
+              menu.addClass('menu-show');
+            }
+          });
+        });
+      </script>
+    </body>
+    </html>
+
+[see it live](http://jsfiddle.net/qX4tK/)
