@@ -41,7 +41,8 @@
         case 'rect':
         case 'poly':
           // Polygon needs to have at least 3 vectors.
-          if (cl >= 6 && cl % 2 === 0) {
+          // If shape = "rect", then the polygon has 4 points and the condition below will never be fulfilled, so it is logical to change it to 4
+          if (cl >= 4 && cl % 2 === 0) {
             xs = []; ys = [];
             for (i = 0; i < cl; i += 1) {
               i % 2 ? ys.push(+coords[i]) : xs.push(+coords[i]);
